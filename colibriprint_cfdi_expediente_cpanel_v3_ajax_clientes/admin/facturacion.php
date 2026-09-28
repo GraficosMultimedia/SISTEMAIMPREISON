@@ -45,9 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $order = $st->fetch();
             if (!$order) throw new RuntimeException('La orden seleccionada no pertenece al cliente indicado.');
 
-            $invoiceNumber = trim((string)($parsed['uuid'] ?? ''));
+            $invoiceNumber = trim((string)($parsed['internal_number'] ?? ''));
             if ($invoiceNumber === '') $invoiceNumber = trim((string)($_POST['invoice_number'] ?? ''));
-            if ($invoiceNumber === '') $invoiceNumber = trim((string)($parsed['internal_number'] ?? ''));
             if ($invoiceNumber === '') $invoiceNumber = finance_invoice_number_next();
             if (!preg_match('/^[A-Za-z0-9._\/-]{2,60}$/', $invoiceNumber)) throw new RuntimeException('El folio de factura no es válido.');
 
@@ -232,10 +231,10 @@ require __DIR__.'/../includes/header.php';
         <div class="cfdi-form-panel">
           <span class="eyebrow">DATOS FISCALES</span><h3>Autollenado + faltantes manuales</h3>
           <div class="form-grid">
-            <div class="field"><label>Folio / UUID <span class="required">*</span></label><input name="invoice_number" id="invoice_number" maxlength="60" placeholder="Se toma del UUID del XML o puedes capturarlo"></div>
+            <div class="field"><label>Folio <span class="required">*</span></label><input name="invoice_number" id="invoice_number" maxlength="60" placeholder="Se toma del XML o puedes capturarlo"></div>
             <div class="field"><label>Fecha <span class="required">*</span></label><input type="date" name="invoice_date" id="invoice_date" value="<?=e((string)$invoice['invoice_date'])?>" required></div>
             <div class="field"><label>Subtotal</label><input type="number" name="subtotal" id="invoice_subtotal" min="0" step="0.01"></div>
-            <div class="field"><label>Impuesto trasladado</label><input type="number" name="tax" id="invoice_tax" min="0" step="0.01" value="0.00"></div>
+            <div class="field"><label>Impuesto</label><input type="number" name="tax" id="invoice_tax" min="0" step="0.01" value="0.00"></div>
             <div class="field"><label>Total <span class="required">*</span></label><input type="number" name="total" id="invoice_total" min="0" step="0.01" required></div>
             <div class="field"><label>Estado</label><select name="status" id="invoice_status"><option value="draft">Borrador</option><option value="issued" selected>Emitida</option><option value="cancelled">Cancelada</option></select></div>
             <div class="field full"><label>UUID / folio fiscal</label><input name="cfdi_uuid" id="cfdi_uuid" maxlength="80" placeholder="Se detecta del Timbre Fiscal Digital"></div>
@@ -255,10 +254,10 @@ require __DIR__.'/../includes/header.php';
     <input type="hidden" name="_csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="invoice_save"><input type="hidden" name="id" value="<?=((int)$invoice['id'])?>">
     <div class="form-grid">
       <div class="field full"><label>Orden de servicio <span class="required">*</span></label><select name="order_id" required><?php foreach($orderOptions as $o): ?><option value="<?=((int)$o['id'])?>" <?=((int)$invoice['order_id']===(int)$o['id']?'selected':'')?>><?=e($o['order_number'])?> · <?=e($o['customer_name']?:'Sin cliente')?> · $<?=number_format((float)$o['total'],2,'.',',')?></option><?php endforeach; ?></select></div>
-      <div class="field"><label>Folio / UUID <span class="required">*</span></label><input name="invoice_number" maxlength="60" value="<?=e((string)$invoice['invoice_number'])?>" required></div>
+      <div class="field"><label>Folio <span class="required">*</span></label><input name="invoice_number" maxlength="60" value="<?=e((string)$invoice['invoice_number'])?>" required></div>
       <div class="field"><label>Fecha <span class="required">*</span></label><input type="date" name="invoice_date" value="<?=e((string)$invoice['invoice_date'])?>" required></div>
       <div class="field"><label>Subtotal</label><input type="number" name="subtotal" min="0" step="0.01" value="<?=e((string)$invoice['subtotal'])?>"></div>
-      <div class="field"><label>Impuesto trasladado</label><input type="number" name="tax" min="0" step="0.01" value="<?=e((string)$invoice['tax'])?>"></div>
+      <div class="field"><label>Impuesto</label><input type="number" name="tax" min="0" step="0.01" value="<?=e((string)$invoice['tax'])?>"></div>
       <div class="field"><label>Total <span class="required">*</span></label><input type="number" name="total" min="0" step="0.01" value="<?=e((string)$invoice['total'])?>" required></div>
       <div class="field"><label>Estado</label><select name="status"><?php foreach(finance_invoice_statuses() as $k=>$label): ?><option value="<?=e($k)?>" <?=$invoice['status']===$k?'selected':''?>><?=e($label)?></option><?php endforeach; ?></select></div>
       <div class="field full"><label>UUID / folio fiscal</label><input name="cfdi_uuid" maxlength="80" value="<?=e((string)$invoice['cfdi_uuid'])?>"></div>
@@ -383,7 +382,7 @@ require __DIR__.'/../includes/header.php';
         const serie=attr(root,'Serie'), folio=attr(root,'Folio'), version=attr(root,'Version'), fecha=attr(root,'Fecha');
         const uuid=attr(tfd,'UUID'), subtotal=attr(root,'SubTotal'), total=attr(root,'Total'), tax=attr(imp,'TotalImpuestosTrasladados');
         const conceptos=[...root.getElementsByTagNameNS('*','Concepto')];
-        setField('invoice_number',uuid||serie+(serie&&folio?'-':'')+folio);
+        setField('invoice_number',serie+(serie&&folio?'-':'')+folio);
         setField('invoice_date',fecha?fecha.slice(0,10):'');
         setField('invoice_subtotal',money(subtotal));
         setField('invoice_tax',money(tax));
