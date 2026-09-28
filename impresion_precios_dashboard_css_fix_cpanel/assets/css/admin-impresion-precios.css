@@ -1,0 +1,235 @@
+/* Colibrí Print - Configuración de impresión dentro del shell administrativo.
+   No cargar colibri-print.css aquí: ese archivo pertenece al formulario público
+   y redefine body/.cp-brand/.cp-card con un tema claro. */
+
+.print-config-page{
+    max-width:1400px;
+    margin:0 auto;
+    padding:4px 0 12px;
+    color:var(--text);
+}
+
+.print-config-page .cp-page-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:22px;
+}
+
+.print-config-page .cp-page-head h1{
+    margin:0 0 6px;
+    font-size:clamp(24px,3vw,34px);
+    line-height:1.1;
+    color:var(--text);
+}
+
+.print-config-page .cp-page-head p{
+    margin:0;
+    color:var(--muted);
+    max-width:760px;
+}
+
+.print-config-page .cp-page-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.print-config-page .eyebrow{
+    font-size:11px;
+    color:var(--cyan);
+    letter-spacing:1.5px;
+}
+
+.print-config-page .cp-success{
+    border:1px solid rgba(13,214,160,.35);
+    background:rgba(13,214,160,.10);
+    color:#70f2c7;
+    padding:13px 16px;
+    border-radius:12px;
+    margin:0 0 18px;
+}
+
+.print-config-page .cp-admin-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+}
+
+.print-config-page .cp-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.print-config-page .cp-card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:14px;
+}
+
+.print-config-page .cp-section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.print-config-page .cp-section-num{
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
+    border-radius:50%;
+    background:#123652;
+    color:var(--cyan);
+    display:grid;
+    place-items:center;
+    font-weight:900;
+}
+
+.print-config-page .cp-section-title h2{
+    font-size:20px;
+    margin:0;
+    color:var(--text);
+}
+
+.print-config-page .cp-section-title p{
+    margin:3px 0 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.print-config-page .cp-admin-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.print-config-page .cp-admin-table th,
+.print-config-page .cp-admin-table td{
+    padding:10px;
+    border-bottom:1px solid #19324f;
+    text-align:left;
+    font-size:13px;
+    color:var(--text);
+}
+
+.print-config-page .cp-admin-table th{
+    color:#8db1d5;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+.print-config-page .cp-admin-table tr:hover td{
+    background:#0f2740;
+}
+
+.print-config-page input,
+.print-config-page select{
+    width:100%;
+    padding:10px 11px;
+    border-radius:9px;
+    border:1px solid #31577e;
+    background:#09182b;
+    color:#eef7ff;
+}
+
+.print-config-page input[type="checkbox"]{
+    width:auto;
+    accent-color:var(--cyan);
+}
+
+.print-config-page input::placeholder{
+    color:#6f8daa;
+}
+
+.print-config-page .cp-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:38px;
+    padding:9px 13px;
+    border-radius:10px;
+    border:1px solid transparent;
+    font-weight:700;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.print-config-page .cp-btn-primary{
+    background:linear-gradient(90deg,var(--blue),var(--cyan));
+    color:#fff;
+}
+
+.print-config-page .cp-btn-soft{
+    background:#16314e;
+    border-color:#31577e;
+    color:#dceeff;
+}
+
+.print-config-page .cp-btn-danger{
+    background:#4a1f2a;
+    border-color:#7d3345;
+    color:#ffb5c0;
+}
+
+.print-config-page .cp-btn:hover{
+    filter:brightness(1.08);
+}
+
+.print-config-page .cp-admin-price{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 120px 120px 1fr auto;
+    gap:8px;
+    align-items:center;
+}
+
+.print-config-page .cp-admin-price button{
+    white-space:nowrap;
+}
+
+@media(max-width:1100px){
+    .print-config-page .cp-admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .print-config-page .cp-admin-price{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+}
+
+@media(max-width:760px){
+    .print-config-page{
+        padding:0 0 10px;
+    }
+
+    .print-config-page .cp-page-head{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .print-config-page .cp-page-actions{
+        width:100%;
+    }
+
+    .print-config-page .cp-page-actions .cp-btn{
+        flex:1;
+    }
+
+    .print-config-page .cp-admin-price{
+        grid-template-columns:1fr;
+    }
+
+    .print-config-page .cp-admin-table{
+        min-width:760px;
+    }
+
+    .print-config-page .cp-card{
+        overflow-x:auto;
+    }
+}
