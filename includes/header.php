@@ -23,6 +23,7 @@ $navGroups = [
             ['/admin/categorias.php', 'Categorías', '◫'],
             ['/admin/cotizadores.php', 'Cotizadores', '∑'],
             ['/admin/cotizaciones.php', 'Cotizaciones', '▤'],
+            ['/admin/autorizaciones.php', 'Imp Clientes', '✓'],
         ],
     ],
     'produccion' => [
@@ -52,15 +53,16 @@ $navGroups = [
             ['/admin/facturacion.php', 'Facturación', '▤'],
             ['/admin/promociones.php', 'Promociones', '%'],
             ['/admin/reportes.php', 'Reportes', '▥'],
-            ['/admin/autorizaciones.php', 'Autorizaciones', '✓'],
         ],
     ],
     'sistema' => [
         'label' => 'Sistema',
         'icon' => '⚙',
         'items' => [
-            ['/admin/configuracion.php', 'Configuración', '⚙'],
-            ['/admin/impresion_precios.php', 'Configuración de impresión', '▣'],
+            ['/admin/configuracion.php', 'Configuración general', '⚙'],
+            ['/admin/impresion_precios.php', 'Configuración de impresión', '🖨'],
+            ['/admin/recepcion_impresiones.php', 'Recepción de impresiones', '▣'],
+            ['/admin/recepcion_historial.php', 'Historial de impresiones', '◴'],
         ],
     ],
 ];
