@@ -189,27 +189,12 @@ body.cp-admin-body .print-config-page .cp-btn-soft{background:#16314e !important
 body.cp-admin-body .print-config-page .cp-btn-soft:hover{background:#1b3d60 !important}
 body.cp-admin-body .print-config-page .cp-btn-danger{background:#4a1f2a !important;border:1px solid #7d3345 !important;color:#ffb5c0 !important}
 body.cp-admin-body .print-config-page .cp-btn-primary{background:linear-gradient(90deg,#188bff,#22d5ff) !important;color:#fff !important;border:0 !important}
-body.cp-admin-body .print-config-page .print-operation-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px;padding:14px 16px;background:#0d1c30 !important;border:1px solid #244665 !important;border-radius:16px !important;box-shadow:0 12px 30px rgba(0,0,0,.2) !important}
-body.cp-admin-body .print-config-page .print-operation-label{color:#8db1d5 !important;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-body.cp-admin-body .print-config-page .print-operation-actions{display:flex;gap:10px;flex-wrap:wrap}
-body.cp-admin-body .print-config-page .print-operation-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 15px;border-radius:10px;text-decoration:none;font-weight:800;transition:.15s ease}
-body.cp-admin-body .print-config-page .print-operation-actions a.operation-primary{background:linear-gradient(90deg,#188bff,#22d5ff) !important;color:#fff !important;border:0}
-body.cp-admin-body .print-config-page .print-operation-actions a.operation-secondary{background:#16314e !important;color:#dceeff !important;border:1px solid #31577e !important}
-body.cp-admin-body .print-config-page .print-operation-actions a:hover{transform:translateY(-1px);filter:brightness(1.08)}
 body.cp-admin-body .print-config-page .cp-admin-price{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr)) auto;gap:8px;align-items:center;margin-bottom:18px}
 body.cp-admin-body .print-config-page .price-edit-grid{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr)) auto;gap:8px;align-items:center}
 @media(max-width:1050px){body.cp-admin-body .print-config-page .cp-admin-price,body.cp-admin-body .print-config-page .price-edit-grid{grid-template-columns:repeat(3,minmax(120px,1fr))}}
 @media(max-width:720px){body.cp-admin-body .print-config-page{padding:12px 10px 28px}body.cp-admin-body .print-config-page .cp-admin-price,body.cp-admin-body .print-config-page .price-edit-grid{grid-template-columns:1fr}body.cp-admin-body .print-config-page .cp-admin-table{display:block;overflow-x:auto;white-space:nowrap}}
 </style>
 <div class="print-config-page">
-
-<div class="print-operation-bar">
-    <div class="print-operation-label">Operación de impresiones</div>
-    <div class="print-operation-actions">
-        <a class="operation-primary" href="recepcion_impresiones.php">🖨 Recepción de impresiones</a>
-        <a class="operation-secondary" href="recepcion_historial.php">📋 Historial de impresiones</a>
-    </div>
-</div>
 
 <?php if ($msg): ?><div class="cp-success">✓ <?= cp_e($msg) ?></div><?php endif; ?>
 

@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($type === 'size') {
                 $name = trim((string)($_POST['name'] ?? ''));
                 $code = strtolower(trim((string)($_POST['code'] ?? '')));
-                if ($id > 0 && $code === '') { $q=$db->prepare('SELECT code FROM cp_print_sizes WHERE id=?'); $q->execute([$id]); $code=(string)$q->fetchColumn(); }
                 $width = (float)($_POST['width_mm'] ?? 0);
                 $height = (float)($_POST['height_mm'] ?? 0);
                 $orientation = trim((string)($_POST['orientation'] ?? 'portrait'));
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($type === 'material') {
                 $name = trim((string)($_POST['name'] ?? ''));
                 $code = strtolower(trim((string)($_POST['code'] ?? '')));
-                if ($id > 0 && $code === '') { $q=$db->prepare('SELECT code FROM cp_print_materials WHERE id=?'); $q->execute([$id]); $code=(string)$q->fetchColumn(); }
                 $unit = trim((string)($_POST['unit_label'] ?? 'hoja')) ?: 'hoja';
                 $sort = (int)($_POST['sort_order'] ?? 0);
                 if ($name === '' || $code === '') throw new RuntimeException('Completa nombre y código.');
@@ -56,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $name = trim((string)($_POST['name'] ?? ''));
                 $code = strtolower(trim((string)($_POST['code'] ?? '')));
-                if ($id > 0 && $code === '') { $q=$db->prepare('SELECT code FROM cp_print_finishes WHERE id=?'); $q->execute([$id]); $code=(string)$q->fetchColumn(); }
                 $sort = (int)($_POST['sort_order'] ?? 0);
                 if ($name === '' || $code === '') throw new RuntimeException('Completa nombre y código.');
 
@@ -164,52 +161,30 @@ require __DIR__ . '/../includes/header.php';
 ?>
 <link rel="stylesheet" href="/assets/css/colibri-print.css">
 <style>
-/* Esta pantalla debe heredar el lenguaje visual del dashboard, no el tema publico. */
-body.cp-admin-body .print-config-page{max-width:1400px;margin:0 auto;padding:18px 24px 40px;color:#eaf5ff;background:transparent}
-body.cp-admin-body .print-config-page .cp-success{margin:0 0 18px;background:#0b2630 !important;border:1px solid #1f6a78 !important;color:#73f0c5 !important;border-radius:14px;padding:13px 16px}
-body.cp-admin-body .print-config-page .cp-admin-grid{gap:18px}
-body.cp-admin-body .print-config-page .cp-card{background:#0d1c30 !important;border:1px solid #244665 !important;border-radius:18px !important;box-shadow:0 18px 45px rgba(0,0,0,.28) !important;color:#eaf5ff !important}
-body.cp-admin-body .print-config-page .cp-card-head{background:transparent !important;border:0 !important;margin-bottom:12px}
-body.cp-admin-body .print-config-page .cp-section-title h2{color:#eaf5ff !important;margin:0}
-body.cp-admin-body .print-config-page .cp-section-title p{color:#9eb8d5 !important}
-body.cp-admin-body .print-config-page .cp-section-num{background:#123652 !important;color:#22d5ff !important}
-body.cp-admin-body .print-config-page .cp-admin-table{width:100%;color:#eaf5ff !important;background:transparent !important;border-collapse:collapse}
-body.cp-admin-body .print-config-page .cp-admin-table th{background:transparent !important;color:#8db1d5 !important;border-bottom:1px solid #244665 !important}
-body.cp-admin-body .print-config-page .cp-admin-table td{background:transparent !important;color:#eaf5ff !important;border-bottom:1px solid #19324f !important}
-body.cp-admin-body .print-config-page .cp-admin-table tr:hover td{background:#0f2740 !important}
-body.cp-admin-body .print-config-page input,
-body.cp-admin-body .print-config-page select{box-sizing:border-box;background:#09182b !important;color:#eef7ff !important;border:1px solid #31577e !important;border-radius:10px !important;min-height:40px;padding:8px 10px}
-body.cp-admin-body .print-config-page input::placeholder{color:#6e8ba8 !important}
-body.cp-admin-body .print-config-page input:focus,
-body.cp-admin-body .print-config-page select:focus{border-color:#22d5ff !important;box-shadow:0 0 0 3px rgba(34,213,255,.12) !important;outline:none}
-body.cp-admin-body .print-config-page .crud-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-body.cp-admin-body .print-config-page .crud-actions form{margin:0}
-body.cp-admin-body .print-config-page .cp-btn{border-radius:10px !important;min-height:40px}
-body.cp-admin-body .print-config-page .cp-btn-soft{background:#16314e !important;border:1px solid #31577e !important;color:#dceeff !important}
-body.cp-admin-body .print-config-page .cp-btn-soft:hover{background:#1b3d60 !important}
-body.cp-admin-body .print-config-page .cp-btn-danger{background:#4a1f2a !important;border:1px solid #7d3345 !important;color:#ffb5c0 !important}
-body.cp-admin-body .print-config-page .cp-btn-primary{background:linear-gradient(90deg,#188bff,#22d5ff) !important;color:#fff !important;border:0 !important}
-body.cp-admin-body .print-config-page .print-operation-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px;padding:14px 16px;background:#0d1c30 !important;border:1px solid #244665 !important;border-radius:16px !important;box-shadow:0 12px 30px rgba(0,0,0,.2) !important}
-body.cp-admin-body .print-config-page .print-operation-label{color:#8db1d5 !important;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-body.cp-admin-body .print-config-page .print-operation-actions{display:flex;gap:10px;flex-wrap:wrap}
-body.cp-admin-body .print-config-page .print-operation-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 15px;border-radius:10px;text-decoration:none;font-weight:800;transition:.15s ease}
-body.cp-admin-body .print-config-page .print-operation-actions a.operation-primary{background:linear-gradient(90deg,#188bff,#22d5ff) !important;color:#fff !important;border:0}
-body.cp-admin-body .print-config-page .print-operation-actions a.operation-secondary{background:#16314e !important;color:#dceeff !important;border:1px solid #31577e !important}
-body.cp-admin-body .print-config-page .print-operation-actions a:hover{transform:translateY(-1px);filter:brightness(1.08)}
-body.cp-admin-body .print-config-page .cp-admin-price{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr)) auto;gap:8px;align-items:center;margin-bottom:18px}
-body.cp-admin-body .print-config-page .price-edit-grid{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr)) auto;gap:8px;align-items:center}
-@media(max-width:1050px){body.cp-admin-body .print-config-page .cp-admin-price,body.cp-admin-body .print-config-page .price-edit-grid{grid-template-columns:repeat(3,minmax(120px,1fr))}}
-@media(max-width:720px){body.cp-admin-body .print-config-page{padding:12px 10px 28px}body.cp-admin-body .print-config-page .cp-admin-price,body.cp-admin-body .print-config-page .price-edit-grid{grid-template-columns:1fr}body.cp-admin-body .print-config-page .cp-admin-table{display:block;overflow-x:auto;white-space:nowrap}}
+.print-config-page{max-width:1400px;margin:0 auto;padding:24px 0 40px}
+.print-config-page .cp-page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px}
+.print-config-page .cp-page-head h1{margin:0 0 6px;font-size:clamp(24px,3vw,34px);line-height:1.1}
+.print-config-page .cp-page-head p{margin:0;color:#64748b;max-width:760px}
+.print-config-page .cp-page-actions{display:flex;gap:10px;flex-wrap:wrap}
+.crud-actions{display:flex;gap:6px;flex-wrap:wrap}
+.crud-actions form{margin:0}
+.price-edit{margin:0}
+.price-edit-grid{display:grid;grid-template-columns:repeat(6,minmax(110px,1fr));gap:8px}
+@media(max-width:900px){.price-edit-grid{grid-template-columns:repeat(2,minmax(120px,1fr))}}
+@media(max-width:720px){.print-config-page{padding:16px 0 28px}.print-config-page .cp-page-head{align-items:stretch;flex-direction:column}.print-config-page .cp-page-actions{width:100%}.print-config-page .cp-page-actions .cp-btn{flex:1}}
 </style>
 <div class="print-config-page">
-
-<div class="print-operation-bar">
-    <div class="print-operation-label">Operación de impresiones</div>
-    <div class="print-operation-actions">
-        <a class="operation-primary" href="recepcion_impresiones.php">🖨 Recepción de impresiones</a>
-        <a class="operation-secondary" href="recepcion_historial.php">📋 Historial de impresiones</a>
+  <div class="cp-page-head">
+    <div>
+      <div class="eyebrow">SISTEMA · CONFIGURACIÓN DE IMPRESIÓN</div>
+      <h1>Configuración de impresión</h1>
+      <p>Administra tamaños, materiales, acabados y las combinaciones de precios que utilizará el cotizador y verá el cliente.</p>
     </div>
-</div>
+    <div class="cp-page-actions">
+      <a class="cp-btn cp-btn-soft" href="/admin/recepcion_impresiones.php">Recepción</a>
+      <a class="cp-btn cp-btn-primary" href="/solicitar_impresion.php">Ver formulario</a>
+    </div>
+  </div>
 
 <?php if ($msg): ?><div class="cp-success">✓ <?= cp_e($msg) ?></div><?php endif; ?>
 
@@ -218,11 +193,10 @@ body.cp-admin-body .print-config-page .price-edit-grid{display:grid;grid-templat
 <section class="cp-card cp-section">
 <div class="cp-card-head"><div class="cp-section-title"><div class="cp-section-num">1</div><div><h2>Tamaños</h2><p>Editar, guardar o eliminar tamaños.</p></div></div></div>
 <table class="cp-admin-table">
-<tr><th>Nombre</th><th>Código</th><th>Medidas</th><th>Activo</th><th>Acciones</th></tr>
+<tr><th>Nombre</th><th>Medidas</th><th>Activo</th><th>Acciones</th></tr>
 <?php foreach ($sizes as $s): $fid='size-'.$s['id']; ?>
 <tr>
-<td><input form="<?= $fid ?>" name="name" value="<?= cp_e($s['name']) ?>" required></td>
-<td><input form="<?= $fid ?>" name="code" value="<?= cp_e($s['code']) ?>" required></td>
+<td><input form="<?= $fid ?>" name="name" value="<?= cp_e($s['name']) ?>"></td>
 <td><input form="<?= $fid ?>" name="width_mm" type="number" step=".01" value="<?= $s['width_mm'] ?>" style="width:90px"> × <input form="<?= $fid ?>" name="height_mm" type="number" step=".01" value="<?= $s['height_mm'] ?>" style="width:90px"></td>
 <td><input form="<?= $fid ?>" name="enabled" type="checkbox" value="1" <?= $s['enabled'] ? 'checked' : '' ?>></td>
 <td class="crud-actions">
@@ -243,11 +217,10 @@ body.cp-admin-body .print-config-page .price-edit-grid{display:grid;grid-templat
 <section class="cp-card cp-section">
 <div class="cp-card-head"><div class="cp-section-title"><div class="cp-section-num">2</div><div><h2>Materiales</h2><p>Editar, guardar o eliminar materiales.</p></div></div></div>
 <table class="cp-admin-table">
-<tr><th>Nombre</th><th>Código</th><th>Unidad</th><th>Activo</th><th>Acciones</th></tr>
+<tr><th>Nombre</th><th>Unidad</th><th>Activo</th><th>Acciones</th></tr>
 <?php foreach ($materials as $m): $fid='material-'.$m['id']; ?>
 <tr>
 <td><input form="<?= $fid ?>" name="name" value="<?= cp_e($m['name']) ?>"></td>
-<td><input form="<?= $fid ?>" name="code" value="<?= cp_e($m['code']) ?>" required></td>
 <td><input form="<?= $fid ?>" name="unit_label" value="<?= cp_e($m['unit_label']) ?>" style="width:100px"></td>
 <td><input form="<?= $fid ?>" name="enabled" type="checkbox" value="1" <?= $m['enabled'] ? 'checked' : '' ?>></td>
 <td class="crud-actions">
@@ -274,7 +247,7 @@ body.cp-admin-body .print-config-page .price-edit-grid{display:grid;grid-templat
 <?php foreach ($finishes as $f): $fid='finish-'.$f['id']; ?>
 <tr>
 <td><input form="<?= $fid ?>" name="name" value="<?= cp_e($f['name']) ?>"></td>
-<td><input form="<?= $fid ?>" name="code" value="<?= cp_e($f['code']) ?>" required></td>
+<td><?= cp_e($f['code']) ?></td>
 <td><input form="<?= $fid ?>" name="enabled" type="checkbox" value="1" <?= $f['enabled'] ? 'checked' : '' ?>></td>
 <td class="crud-actions">
 <form id="<?= $fid ?>" method="post" action="impresion_precios.php">
