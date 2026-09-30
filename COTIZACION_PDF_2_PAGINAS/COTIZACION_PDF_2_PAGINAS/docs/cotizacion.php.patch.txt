@@ -1,0 +1,9 @@
+CAMBIO MANUAL EN admin/cotizacion.php
+
+ANTES:
+<button class="btn btn-secondary" type="button" onclick="window.print()">Imprimir / PDF</button>
+
+DESPUES:
+<a class="btn btn-secondary" target="_blank" href="/admin/cotizacion_pdf_2paginas.php?id=<?=((int)$id)?>">Imprimir / PDF</a>
+
+Con este cambio, el botón del panel abrirá la nueva salida de 2 páginas en una pestaña independiente.
