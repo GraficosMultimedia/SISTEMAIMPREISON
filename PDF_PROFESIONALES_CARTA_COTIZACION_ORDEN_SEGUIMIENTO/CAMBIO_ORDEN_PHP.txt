@@ -1,0 +1,20 @@
+CAMBIO REQUERIDO EN admin/orden.php
+
+Dentro de .order-toolbar-actions, agrega este botón junto al botón "Imprimir":
+
+<a class="btn btn-primary"
+   href="/admin/orden_pdf_2paginas.php?id=<?=((int)$id)?>"
+   target="_blank"
+   rel="noopener">
+    📄 PDF profesional
+</a>
+
+NO reemplaza ni elimina el botón existente "Imprimir".
+
+Archivos incluidos en este ZIP:
+- admin/cotizacion_pdf_2paginas.php
+  PDF de cotización en tamaño Carta, 2 páginas, con anticipo y saldo.
+- admin/orden_pdf_2paginas.php
+  Nuevo PDF profesional de orden en tamaño Carta, 2 páginas.
+- seguimiento_comprobante.php
+  PDF de seguimiento actualizado a 2 páginas y tamaño Carta.
